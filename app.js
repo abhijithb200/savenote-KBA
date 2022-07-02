@@ -34,15 +34,15 @@ app.get('/', (req, res) => {
 });
 
 app.post('/note', async (req, res) => {
-    var note = req.body.note
+    var {note,title,author} = req.body
+    
 
-    const newNote = new Notes({note})
+    const newNote = new Notes({note,title,author})
     // Save mongodb
     await newNote.save((err,result)=>{
         if (err) console.log(err);
         else{
             const id = result._id
-            console.log(id)
             res.redirect('/viewnote/'+id)
         }
     })
@@ -51,8 +51,10 @@ app.post('/note', async (req, res) => {
 
 app.get('/viewnote/:id',async (req, res) => {
     const id = req.params.id
+    
     await Notes.findById(id).then((docs)=>{
-            res.render('viewnote',{note:docs.note})
+            var date = docs.updatedAt.toISOString().match(/\d{4}-[01]\d-[0-3]\d+/)[0]
+            res.render('viewnote',{note:docs.note,date:date,title:docs.title,author:docs.author})
     })
     // res.send("tagId is set to " + req.params.id)
     
