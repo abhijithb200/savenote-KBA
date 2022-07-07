@@ -29,16 +29,19 @@ mongoose.connect(URI, {
 
 
 //routes
+
+//the home page
 app.get('/', (req, res) => {
     res.render('home');
 });
 
+//accept data from the user through post request
 app.post('/note', async (req, res) => {
-    var {note,title,author} = req.body
+    var {note,title,author,image} = req.body
     
 
-    const newNote = new Notes({note,title,author})
-    // Save mongodb
+    const newNote = new Notes({note,title,author,image})
+    //Save the user provided details to the database
     await newNote.save((err,result)=>{
         if (err) console.log(err);
         else{
@@ -49,15 +52,15 @@ app.post('/note', async (req, res) => {
    
 });
 
+//display the note
 app.get('/viewnote/:id',async (req, res) => {
     const id = req.params.id
     
+    //retrieve the data from the database based on the id and render
     await Notes.findById(id).then((docs)=>{
             var date = docs.updatedAt.toISOString().match(/\d{4}-[01]\d-[0-3]\d+/)[0]
-            res.render('viewnote',{note:docs.note,date:date,title:docs.title,author:docs.author})
-    })
-    // res.send("tagId is set to " + req.params.id)
-    
+            res.render('viewnote',{note:docs.note,date:date,image:docs.image,title:docs.title,author:docs.author})
+    })    
 });
 
 

@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 
+
+//modal for the note
 const noteSchema = new mongoose.Schema({
     note : {
         type: String,
@@ -10,6 +12,9 @@ const noteSchema = new mongoose.Schema({
     },
     author:{
         type: String
+    },
+    image:{
+        type:String
     }
 },{
     timestamps: true
